@@ -3,6 +3,9 @@ name: Update Greeting File
 on:
   workflow_dispatch:
 
+permissions:  # ✅ Add this to grant write permissions
+  contents: write
+
 jobs:
   update-file:
     runs-on: ubuntu-latest
