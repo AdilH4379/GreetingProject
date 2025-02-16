@@ -1,19 +1,24 @@
-name: Greeting Workflow
+name: Update Greeting File
 
 on:
-  push:
-    branches:
-      - main  # Trigger the workflow on pushes to the main branch
+  workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
-  greet:
+  update-file:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Print Greeting
+      - name: Update Greeting File
         run: |
-          echo "Reading the greeting message..."
-          cat greeting.txt
+          echo "This message was added by GitHub Actions on $(date)." >> greeting.txt
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add greeting.txt
+          git commit -m "Update greeting.txt via GitHub Actions"
+          git push
