@@ -1,7 +1,7 @@
 name: Update Greeting File
 
 on:
-  workflow_dispatch:  # Allows manual triggering of the workflow
+  workflow_dispatch:
 
 jobs:
   update-file:
@@ -10,15 +10,19 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # Ensures push permissions
 
       - name: Update Greeting File
         run: |
           echo "This message was added by GitHub Actions on $(date)." >> greeting.txt
 
       - name: Commit and Push Changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add greeting.txt
-          git commit -m "Update greeting.txt via GitHub Actions"
-          git push g
+          git commit -m "Update greeting.txt via GitHub Actions" || echo "No changes to commit"
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git main
